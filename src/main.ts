@@ -4,36 +4,19 @@ import './style.css'
 
 class ClipboardFileListener {
   constructor(callback: (imgData: string | ArrayBuffer) => any) {
-    document.addEventListener("paste", event => {
-      const items = event.clipboardData?.items;
-      let notFileCounter = 0
-      console.log("items", items);
+    document.addEventListener("paste", async event => {
+      const clipboardItems = await navigator.clipboard.read();
+      console.log("clipboardItems", clipboardItems)
+      for (const clipboardItem of clipboardItems) {
+        const imageTypes = clipboardItem.types?.filter((type) =>
+          type.startsWith("image/")
+        );
 
-      // Correct iteration using a for loop
-      if (!items) throw new Error("Error: no items found")
-
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        console.log("item", item);
-
-        if (item.kind === 'file') {
-          console.log("item", item);
-          const blob = item.getAsFile();
-          const reader = new FileReader();
-          reader.onload = e => {
-            if (!e.target?.result) throw new Error("Error: file format not supported")
-            callback(e.target?.result)
-          }
-          reader.onerror = e => { throw new Error(`${e}`) }
-
-          if (!blob) throw new Error("Error: blob was null")
-          reader.readAsDataURL(blob);
-        } else {
-          notFileCounter++
+        for (const imageType of imageTypes) {
+          const blob = await clipboardItem.getType(imageType);
+          callback(URL.createObjectURL(blob))
         }
       }
-
-      if (notFileCounter === items.length) throw new Error("No image/file found")
     });
   }
 }
