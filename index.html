@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to luminance</title>
+  <script type="module" crossorigin>(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))n(t);new MutationObserver(t=>{for(const o of t)if(o.type==="childList")for(const c of o.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&n(c)}).observe(document,{childList:!0,subtree:!0});function s(t){const o={};return t.integrity&&(o.integrity=t.integrity),t.referrerPolicy&&(o.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?o.credentials="include":t.crossOrigin==="anonymous"?o.credentials="omit":o.credentials="same-origin",o}function n(t){if(t.ep)return;t.ep=!0;const o=s(t);fetch(t.href,o)}})();class u{constructor(e){document.addEventListener("paste",async s=>{var t;const n=await navigator.clipboard.read();console.log("clipboardItems",n);for(const o of n){const c=(t=o.types)==null?void 0:t.filter(i=>i.startsWith("image/"));for(const i of c){const d=await o.getType(i);e(URL.createObjectURL(d))}}})}}const a=document.createElement("canvas"),l=a.getContext("2d");if(!l)throw new Error("ERROR: 2d context not supported!");new u(r=>{if(typeof r!="string")throw new Error("Error: arraybuffer not supported!");const e=document.createElement("img");e.src=r,e.onload=()=>{var d;console.log("loaded"),a.width=e.width,a.height=e.height;const s=m(l,e,()=>{}),n=m(l,e,f),t=document.createElement("img"),o=document.createElement("img");t.src=s,o.src=n;const c=document.createElement("div");c.classList.add("shadow-container"),c.append(t),c.append(o);const i=document.createElement("div");i.classList.add("img-container"),i.append(c),(d=document.getElementById("content"))==null||d.prepend(i)}});function m(r,e,s){r.drawImage(e,0,0);const n=r.getImageData(0,0,a.width,a.height);return s(n.data),r.putImageData(n,0,0),a.toDataURL()}function f(r){for(let e=0;e<r.length;e+=4){const s=r[e]/255,n=r[e+1]/255,t=r[e+2]/255,o=.299*s+.587*n+.114*t;r[e]=o*255,r[e+1]=o*255,r[e+2]=o*255}}
+</script>
+  <style rel="stylesheet" crossorigin>*,html{font-family:Arial,Helvetica,sans-serif;padding:0;margin:0;box-sizing:border-box;--app-color: #ffffff;--pattern-color: rgb(187, 187, 187);--border-color: rgb(207, 207, 207)}html{display:grid;text-align:center}h1{margin:3rem}#content{display:grid;gap:2rem;padding-bottom:5rem}.img-container{display:flex;justify-content:center}.shadow-container{display:flex;box-shadow:.2rem .2rem 10px #000}
+</style>
+</head>
+
+<body>
+  <h1><b><i>CTRL+V</i></b> <span style="font-weight: 300;">to convert image to luminance scale</span></h1>
+
+  <div id="content"></div>
+</body>
+
+</html>
